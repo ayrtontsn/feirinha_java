@@ -1,5 +1,7 @@
 package com.feirinha.api.models;
 
+import com.feirinha.api.dtos.ItemsDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,4 +29,10 @@ public class ItemsModel {
 
 	@Column(nullable = false)
   private Double value;
+
+  public ItemsModel(ItemsDTO dto){
+    this.name = dto.getName();
+    this.value = Double.valueOf(dto.getValue());
+  }
 }
+

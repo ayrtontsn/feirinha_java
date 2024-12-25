@@ -4,6 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.feirinha.api.repositories.ItemsRepository;
+
+import jakarta.validation.Valid;
+
+import com.feirinha.api.dtos.ItemsDTO;
 import com.feirinha.api.models.ItemsModel;
 
 import java.util.List;
@@ -11,6 +15,9 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -36,6 +43,13 @@ public class ItemsController {
         }
 
         return Optional.of(item.get());
+    }
+    
+    @PostMapping
+    public void postItem(@RequestBody @Valid ItemsDTO body) {
+        
+        ItemsModel item = new ItemsModel(body);
+        itemsRepository.save(item);
     }
     
 }
