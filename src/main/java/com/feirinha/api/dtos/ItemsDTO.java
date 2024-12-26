@@ -9,11 +9,11 @@ import lombok.Data;
 @Data
 public class ItemsDTO {
 
-    @NotBlank
+    @NotBlank(message = "Field name cannot be null")
     @Size(min = 3, max = 150, message = "Length for name is 3 to 150 characters!")
     private String name;
 
-    @Positive
-    @NotNull
+    @Positive(message = "quantity should be greater than zero")
+    @NotNull(message = "Field quantity cannot be null")
     private Integer quantity;
 }

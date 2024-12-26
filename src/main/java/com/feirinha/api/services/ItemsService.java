@@ -35,10 +35,14 @@ public class ItemsService {
         return Optional.of(itemsRepository.save(item));
     }
 
-    public void update(Long id, ItemsDTO dto){
+    public Optional<ItemsModel>  update(Long id, ItemsDTO dto){
+        if(itemsRepository.existsByName(dto.getName())){
+            return Optional.empty();
+        }
         ItemsModel item = new ItemsModel(dto);
         item.setId(id);
-        itemsRepository.save(item);
+
+        return Optional.of(itemsRepository.save(item));
     }
 
     public void deleteById(Long id){

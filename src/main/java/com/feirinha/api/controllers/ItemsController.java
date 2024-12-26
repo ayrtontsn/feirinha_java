@@ -42,7 +42,7 @@ public class ItemsController {
     public ResponseEntity<Object> getItemById(@PathVariable("id") Long id){
         Optional<ItemsModel> item = itemsService.findById(id);
         if (!item.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item not found.");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(item.get());
@@ -61,12 +61,21 @@ public class ItemsController {
     
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateItem(@PathVariable Long id, @RequestBody @Valid ItemsDTO body) {
-        itemsService.update(id, body);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        if(!itemsService.findById(id).isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item not found.");
+        }
+        Optional<ItemsModel> item = itemsService.update(id, body);
+        if(!item.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Repeated name");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(item.get());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteItem(@PathVariable("id") Long id){
+        if(!itemsService.findById(id).isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item not found.");
+        }
         itemsService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
