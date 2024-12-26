@@ -14,9 +14,11 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -49,9 +51,23 @@ public class ItemsController {
     @PostMapping
     public ResponseEntity<Object> postItem(@RequestBody @Valid ItemsDTO body) {
         
-        ItemsModel item = itemsService.save(body);
+        Optional<ItemsModel> item = itemsService.save(body);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(item);
+        if(!item.isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Repeated name");
+        } 
+        return ResponseEntity.status(HttpStatus.CREATED).body(item.get());
     }
     
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateItem(@PathVariable Long id, @RequestBody @Valid ItemsDTO body) {
+        itemsService.update(id, body);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteItem(@PathVariable("id") Long id){
+        itemsService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

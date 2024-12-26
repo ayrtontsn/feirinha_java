@@ -25,9 +25,23 @@ public class ItemsService {
         return itemsRepository.findById(id);
     }
 
-    public ItemsModel save(ItemsDTO dto){
+    public Optional<ItemsModel> save(ItemsDTO dto){
+        
+        if(itemsRepository.existsByName(dto.getName())){
+            return Optional.empty();
+        }
         ItemsModel item = new ItemsModel(dto);
 
-        return itemsRepository.save(item);
+        return Optional.of(itemsRepository.save(item));
+    }
+
+    public void update(Long id, ItemsDTO dto){
+        ItemsModel item = new ItemsModel(dto);
+        item.setId(id);
+        itemsRepository.save(item);
+    }
+
+    public void deleteById(Long id){
+        itemsRepository.deleteById(id);
     }
 }
