@@ -28,11 +28,11 @@ public class ItemsModel {
   private String name;
 
 	@Column(nullable = false)
-  private Double value;
+  private Integer quantity;
 
   public ItemsModel(ItemsDTO dto){
     this.name = dto.getName();
-    this.value = Double.valueOf(dto.getValue());
+    this.quantity = dto.getQuantity();
   }
 }
 
